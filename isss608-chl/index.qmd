@@ -1,0 +1,11 @@
+---
+title: "isss608-chl"
+---
+
+Hello! This is a Quarto website built for my SMU module ISSS608 - Visual Analytics and Applications.
+
+To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+
+```{r}
+1 + 1
+```
