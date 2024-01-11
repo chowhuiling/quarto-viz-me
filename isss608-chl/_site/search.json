@@ -9,8 +9,8 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "isss608-chl",
+    "title": "ISSS608-VAA",
     "section": "",
-    "text": "Hello! This is a Quarto website built for my SMU module ISSS608 - Visual Analytics and Applications.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites.\n\n1 + 1\n\n[1] 2"
+    "text": "Hello! Welcome to ISSS608 Visual Analytics and Applications homepage. In this website, you will find my coursework prepared for this course. Will be adding more along the way.\nThis website is built using Quarto and powered by Netlify."
   }
 ]
