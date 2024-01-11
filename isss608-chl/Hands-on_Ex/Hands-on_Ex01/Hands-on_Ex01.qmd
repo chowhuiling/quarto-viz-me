@@ -1,0 +1,42 @@
+---
+title: "Hands-on Exercise 1"
+author: "Chow Hui Ling"
+date: "`r Sys.Date()`"
+date-format: "DD MMM YYYY hh:mm"
+---
+
+# Getting Started
+
+## Install and launching R packages
+
+The code chunk below uses p_load function of pacman package to check if tidyverse packages have been installed in the computer. If they are, then they will be launched into R.
+
+```{r}
+pacman::p_load(tidyverse)
+
+```
+
+## Importing the data
+
+```{r}
+exam_data <- read_csv("data/Exam_data.csv")
+```
+
+# Plotting a simple bar chart
+
+```{r}
+ # eval: false
+#| echo: false
+# echo:false = show output without code
+ggplot(data=exam_data,
+       aes(x = RACE)) +
+  geom_bar()
+```
+
+# Using Quarto to show/hide code and output
+
+```{qmd}
+#| eval: true
+#| echo: false
+sample = 123
+```
