@@ -2,7 +2,7 @@
 title: "Hands-on Exercise 1"
 author: "Chow Hui Ling"
 date: "`r Sys.Date()`"
-date-format: "DD MMM YYYY hh:mm"
+date-format: "DD MMM YYYY"
 ---
 
 # Getting Started
