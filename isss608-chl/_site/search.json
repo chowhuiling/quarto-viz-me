@@ -11,21 +11,21 @@
     "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html",
     "title": "Hands-on Exercise 1",
     "section": "",
-    "text": "The code chunk below uses p_load function of pacman package to check if tidyverse packages have been installed in the computer. If they are, then they will be launched into R.\n\npacman::p_load(tidyverse)\n\n\n\n\n\nexam_data &lt;- read_csv(\"data/Exam_data.csv\")\n\nRows: 322 Columns: 7\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (4): ID, CLASS, GENDER, RACE\ndbl (3): ENGLISH, MATHS, SCIENCE\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message."
+    "text": "Note: Contents of this page are referenced from: instructor’s materials"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#install-and-launching-r-packages",
     "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#install-and-launching-r-packages",
     "title": "Hands-on Exercise 1",
-    "section": "",
-    "text": "The code chunk below uses p_load function of pacman package to check if tidyverse packages have been installed in the computer. If they are, then they will be launched into R.\n\npacman::p_load(tidyverse)"
+    "section": "Install and launching R packages",
+    "text": "Install and launching R packages\nThe code chunk below uses p_load function of pacman package to check if tidyverse packages have been installed in the computer. If they are, then they will be launched into R environment.\n\npacman::p_load(tidyverse)"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#importing-the-data",
     "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#importing-the-data",
     "title": "Hands-on Exercise 1",
-    "section": "",
-    "text": "exam_data &lt;- read_csv(\"data/Exam_data.csv\")\n\nRows: 322 Columns: 7\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (4): ID, CLASS, GENDER, RACE\ndbl (3): ENGLISH, MATHS, SCIENCE\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message."
+    "section": "Importing the data",
+    "text": "Importing the data\nThe code below imports Exam_data.csv into R environment by using read_csv() function in the readr tidyverse package.\n\nexam_data &lt;- read_csv(\"data/Exam_data.csv\")\n\nRows: 322 Columns: 7\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (4): ID, CLASS, GENDER, RACE\ndbl (3): ENGLISH, MATHS, SCIENCE\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.\n\n\n\nData contains year end examination grades of a cohort of primary 3 students from a local school.\nThere are a total of seven attributes. chr stands for categorical data (four of them, namely, ID, CLASS, GENDER and RACE). dbl refers to continuous attributes: ENGLISH, MATHS and SCIENCE."
   },
   {
     "objectID": "index.html",
@@ -33,5 +33,40 @@
     "title": "ISSS608-VAA",
     "section": "",
     "text": "Hello! Welcome to ISSS608 Visual Analytics and Applications homepage. In this website, you will find my coursework prepared for this course. Will be adding more along the way.\nThis website is built using Quarto and powered by Netlify."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#a-layered-grammar-of-graphics",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#a-layered-grammar-of-graphics",
+    "title": "Hands-on Exercise 1",
+    "section": "A Layered Grammar of Graphics",
+    "text": "A Layered Grammar of Graphics\nA short description of each building block are as follows:\n\nData: The dataset being plotted.\nAesthetics take attributes of the data and use them to influence visual characteristics, such as position, colours, size, shape, or transparency.\nGeometrics: The visual elements used for our data, such as point, bar or line.\nFacets split the data into subsets to create multiple variations of the same graph (paneling, multiple plots).\nStatistics, statiscal transformations that summarise data (e.g. mean, confidence intervals).\nCoordinate systems define the plane on which data are mapped on the graphic.\nThemes modify all non-data components of a plot, such as main title, sub-title, y-aixs title, or legend background."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#data",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#data",
+    "title": "Hands-on Exercise 1",
+    "section": "data",
+    "text": "data\n\nggplot(data=exam_data)\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\n\nA blank canvas appears.\nggplot() initializes a ggplot object.\nThe data argument defines the dataset to be used for plotting.\nIf the dataset is not already a data.frame, it will be converted to one by fortify()."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#aesthetic-mappings",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#aesthetic-mappings",
+    "title": "Hands-on Exercise 1",
+    "section": "Aesthetic mappings",
+    "text": "Aesthetic mappings\nAesthetic mappings allow the use of visual characteristics to encode an aspect of the data so as to convey information.\nAll aesthetics of a plot are specified in the aes() function call (in later part of this lesson, you will see that each geom layer can have its own aes specification)\nCode chunk below adds aesthetic element into the plot to include the x-axis and the axis’s label.\n\nggplot(data=exam_data,\n       aes(x= MATHS))"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#geom",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#geom",
+    "title": "Hands-on Exercise 1",
+    "section": "Geom",
+    "text": "Geom\n::: panel-tabset ### Description\nGeometric objects are the actual marks we put on a plot. Examples include:\n\ngeom_point for drawing individual points (e.g., a scatter plot)\ngeom_line for drawing lines (e.g., for a line charts)\ngeom_smooth for drawing smoothed lines (e.g., for simple trends or approximations)\ngeom_bar, geom_col for drawing bars (e.g., for bar charts)\ngeom_histogram for drawing binned values (e.g. a histogram)\ngeom_polygon for drawing arbitrary shapes\ngeom_map for drawing polygons in the shape of a map! (You can access the data to use for these maps by using the map_data() function).\ngeom_boxplot: for drawing boxplots\ngeom_density: for distribution frequency\n… (For complete list, please refer to here)\n\nA plot must have at least one geom; there is no upper limit. You can add a geom to a plot using the + operator.\n\ngeom_bar\nThe code chunk below plots a bar chart using geom_bar().\n\nggplot(data=exam_data, aes (x=RACE)) + geom_bar() + geom_dotplot(dotsize = 0.5)\n\nBin width defaults to 1/30 of the range of the data. Pick better value with\n`binwidth`.\n\n\n\n\n\n\n\ngeom_dotplot\nIn a dot plot, the width of a dot corresponds to the bin width (or maximum width, depending on the binning algorithm), and dots are stacked, with each dot representing one observation.\nIn the code chunk below, geom_dotplot() of ggplot2 is used to plot a dot plot.\n\nggplot(data=exam_data, \n       aes(x = MATHS)) +\n  geom_dotplot(dotsize = 0.5)\n\nBin width defaults to 1/30 of the range of the data. Pick better value with\n`binwidth`.\n\n\n\n\n\n\nThe y-scale is not very useful, in fact it is rather misleading.\n\n\n\n\n\n\nNote\n\n\n\nThe code below is used to perform two steps: - scale_y_continuous() is used to turn off the y-axis, and binwidth argument is used to change the binwidth to 2.5.\n\n\n\nggplot(data=exam_data, \n       aes(x = MATHS)) +\n  geom_dotplot(binwidth=2.5,         \n               dotsize = 0.5) +      \n  scale_y_continuous(NULL,           \n                     breaks = NULL)\n\n\n\n\n\ngeom_histogram\nIn the code chunk below, *geom_histogram()* is used to create a simple histogram by using values in MATHS field of exam_data.\nNote that the default bin is 30.\n\nggplot(data=exam_data,\n       aes(x=MATHS)) + geom_histogram()\n\n`stat_bin()` using `bins = 30`. Pick better value with `binwidth`."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#modifying-geometric-objects",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#modifying-geometric-objects",
+    "title": "Hands-on Exercise 1",
+    "section": "Modifying geometric objects",
+    "text": "Modifying geometric objects\n\nby changing geom()\n\n\nIn the code chunk below,\nbins argument is used to change the number of bins to 20, fill argument is used to shade the histogram with light blue color, and color argument is used to change the outline colour of the bars in black\n\nggplot(data=exam_data,\n       aes(x=MATHS)) +\n  geom_histogram(bins=20,\n                 color=\"black\",\n                 fill=\"light blue\")"
   }
 ]
