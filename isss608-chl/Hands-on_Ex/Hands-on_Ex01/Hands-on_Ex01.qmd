@@ -1,13 +1,16 @@
 ---
 title: "Hands-on Exercise 1"
 author: "Chow Hui Ling"
-date: "`r Sys.Date()`"
+date: "12 Jan 2024"
+date-modified: last-modified
+
 source: 
 date-format: "DD MMM YYYY"
 ---
 
+::: callout-note
 Note: Contents of this page are referenced from: [instructor's materials](https://r4va.netlify.app/chap01#essential-grammatical-elements-in-ggplot2-aesthetic-mappings)
-
+:::
 
 # Getting Started
 
@@ -78,7 +81,6 @@ Although ggplot2 requires a longer code chunk, [Hadley Wickham](http://variancee
 
 ------------------------------------------------------------------------
 
-
 # Grammar of Graphics
 
 Grammar of Graphics is a general scheme for data visualization which breaks up graphs into semantic components such as scales and layers. It was introduced by Leland Wilkinson (1999) **Grammar of Graphics**, Springer. The grammar of graphics is an answer to a question:
@@ -117,7 +119,7 @@ A short description of each building block are as follows:
 
 # Essential Grammatical elements in ggplot2:
 
-::: panel-tabset 
+::: panel-tabset
 ## Data
 
 ```{r}
@@ -146,7 +148,7 @@ ggplot(data=exam_data,
 
 ## Geom
 
-::: panel-tabset 
+::: panel-tabset
 ### Description
 
 Geometric objects are the actual marks we put on a plot. Examples include:
@@ -220,12 +222,110 @@ Note that the default bin is **30**.
 ggplot(data=exam_data,
        aes(x=MATHS)) + geom_histogram()
 ```
+
+### geom_density
+
+[`geom-density()`](https://ggplot2.tidyverse.org/reference/geom_density.html) computes and plots [kernel density estimate](https://en.wikipedia.org/wiki/Kernel_density_estimation), which is a smoothed version of the histogram.
+
+It is a useful alternative to the histogram for continuous data that comes from an underlying smooth distribution.
+
+The code below plots the distribution of Maths scores in a kernel density estimate plot.
+
+```{r}
+ggplot(data=exam_data, 
+       aes(x = MATHS)) +
+  geom_density()           
+```
+
+The code chunk below plots two kernel density lines by using *colour* or *fill* arguments of *aes()*
+
+```{r}
+ggplot(data=exam_data, 
+       aes(x = MATHS, 
+           colour = GENDER)) +
+  geom_density()
+
+```
+
+### geom_boxplot()
+
+[`geom_boxplot()`](https://ggplot2.tidyverse.org/reference/geom_boxplot.html) displays continuous value list. It visualises five summary statistics (the median, two hinges and two whiskers), and all “outlying” points individually.
+
+The code chunk below plots boxplots by using [`geom_boxplot()`](https://ggplot2.tidyverse.org/reference/geom_boxplot.html).
+
+```{r}
+ggplot(data=exam_data, 
+       aes(y = MATHS,       
+           x= GENDER)) +    
+  geom_boxplot()            
+```
+
+[**Notches**](https://sites.google.com/site/davidsstatistics/home/notched-box-plots) are used in box plots to help visually assess whether the medians of distributions differ. If the notches do not overlap, this is evidence that the medians are different.
+
+The code chunk below plots the distribution of Maths scores by gender in notched plot instead of boxplot.
+
+```{r}
+ggplot(data=exam_data, 
+       aes(y = MATHS, 
+           x= GENDER)) +
+  geom_boxplot(notch=TRUE)
+```
+
+### geom_voilin()
+
+[`geom_violin`](https://ggplot2.tidyverse.org/reference/geom_violin.html) is designed for creating violin plot. Violin plots are a way of comparing multiple data distributions. With ordinary density curves, it is difficult to compare more than just a few distributions because the lines visually interfere with each other. With a violin plot, it’s easier to compare several distributions since they’re placed side by side.
+
+The code below plot the distribution of Maths score by gender in violin plot.
+
+```{r}
+ggplot(data=exam_data, 
+       aes(y = MATHS, 
+           x= GENDER)) +
+  geom_violin()
+
+```
+
+### geom_point()
+
+[`geom_point()`](https://ggplot2.tidyverse.org/reference/geom_point.html) is especially useful for creating scatterplot.
+
+The code chunk below plots a scatterplot showing the Maths and English grades of pupils by using `geom_point()`.
+
+```{r}
+ggplot(data=exam_data, 
+       aes(x= MATHS, 
+           y=ENGLISH)) +
+  geom_point()            
+
+```
+
+### Combination
+
+The code chunk below plots the data points on the boxplots by using both `geom_boxplot()` and `geom_point()`.
+
+```{r}
+ggplot(data=exam_data, 
+       aes(y = MATHS, 
+           x= GENDER)) +
+  geom_boxplot() +                    
+  geom_point(position="jitter", 
+             size = 0.5)        
+```
+
+### Stat
+
+:::panel-tabset
+
 :::
+:::
+:::
+
+::: panel-tabset
 
 ## Modifying geometric objects
 
 ::: panel-tabset
-### by changing geom()
+### by changing `geom()`
 
 In the code chunk below,
 
@@ -238,14 +338,38 @@ ggplot(data=exam_data,
                  color="black",
                  fill="light blue")
 ```
-:::
-:::
-# Using Quarto to show/hide code and output
 
+### by changing `aes()`
+
+The code below changes the interior colour of the histogram (i.e. `fill`) by changing a sub-group of aesthetic().
+
+grey40 sets the bar borders to a lighter shade of grey
+
+```{r}
+ggplot(data=exam_data,
+       aes(x=MATHS,
+           fill=GENDER)) + geom_histogram(bins=20, color="grey40")
+```
+
+::: callout-note
+This approach can be appllied to colour, fill and alpha of the geometric
+:::
+:::
+:::
+
+# Analyzing the data
+
+```{r}
+ggplot(data=exam_data, 
+       aes(x= MATHS)) +
+    facet_wrap(~ CLASS)
 
 ```
+
+# Using Quarto to show/hide code and output
+
+```         
 #| eval: true
 #| echo: false
 sample = 123
 ```
-

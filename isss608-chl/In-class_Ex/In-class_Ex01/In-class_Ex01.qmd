@@ -1,0 +1,132 @@
+---
+title: "In-class Exercise 1"
+author: "Chow Hui Ling"
+date: "13 Jan 2023"
+
+date-modified: "last-modified"
+date-format: "DD MMM YYYY"
+execute: 
+  eval: true
+  echo: true
+  warning: false
+---
+
+# Problem Statement
+
+## Context
+
+OECD education director Andreas Schleicher shared in a BBC article that “Singapore managed to achieve excellence without wide differences between children from wealthy and disadvantaged families.” (2016) Furthermore, several Singapore’s Minister for Education also started an “every school a good school” slogan. The general public, however, strongly belief that there are still disparities that exist, especially between the elite schools and neighborhood school, between students from families with higher socioeconomic status and those with relatively lower socioeconomic status and **immigration and non-immigration families**.
+
+## Task
+
+The 2022 Programme for International Student Assessment (PISA) data was released on December 5, 2022. PISA global education survey every three years to assess the education systems worldwide through testing 15 year old students in the subjects of mathematics, reading, and science.
+
+In this take-home exercise, you are required to use appropriate **Exploratory Data Analysis (EDA)** methods and **ggplot2** functions to reveal:
+
+-   **the distribution of Singapore students’ performance in mathematics, reading, and science, and**
+
+-   **the relationship between these performances with schools, gender and socioeconomic status of the students.**
+
+Limit your submission to not more than **five** EDA visualisation.
+
+The writeup should contain:
+
+-   A reproducible description of the procedures used to prepare the analytical visualisation. Please refer to the senior submission I shared below.
+
+-   A write-up of not more than 150 words to describe and discuss the patterns reveal by each EDA visualisation prepared.
+
+## The Data
+
+The [PISA 2022 database](https://www.oecd.org/pisa/data/2022database/) contains the full set of responses from individual students, school principals and parents. There are a total of five data files and their contents are as follows:
+
+-   Student questionnaire data file
+
+-   School questionnaire data file
+
+-   Teacher questionnaire data file
+
+-   Cognitive item data file
+
+-   Questionnaire timing data file
+
+These data files are in SAS and SPSS formats. For the purpose of this assignment, you are required to use the **Student questionnaire data file** only. However, you are encouraged to download the other files for future needs.
+
+Besides the data files, you will find a collection of complementary materials such as questionnaires, codebooks, compendia and the rescaled indices for trend analyses in this page too.
+
+To learn more about PISA 2022 survey, you are encouraged to consult [PISA 2022 Technical Report](https://www.oecd.org/pisa/data/pisa2022technicalreport/)
+
+------------------------------------------------------------------------
+
+## Designing Tools
+
+-   Process the data using  **tidyverse** packages
+
+-   Statistical graphics must be prepared using **ggplot2** and its extensions.
+
+------------------------------------------------------------------------
+
+# Write-up
+
+## Version 1
+
+### Loading R Packages
+
+In this hands-on exercise, two R packages will be used. They are:
+
+-   [*tidyverse*](https://www.tidyverse.org/) ; and
+-   [*haven*](https://haven.tidyverse.org/reference/index.html)
+
+The code chunk used is as follows:
+
+```{r}
+pacman::p_load(tidyverse,haven)
+
+```
+
+Note: using `pacman::p_load()` instead of `p_load()` allows us to use the p_load libary in pacman package even if pacman is not installed.
+
+The code chunk below uses [`read_sas()`](https://haven.tidyverse.org/reference/read_sas.html) of [haven](https://haven.tidyverse.org/index.html) to import PISA data into R envionment.
+
+```{r}
+#| eval: false
+stu_qqq <- read_sas("data/cy08msp_stu_qqq.sas7bdat")
+```
+
+Interpreting the results: 613744 obs. of 1279 variables means there are 613744 observations, with 1279 columns in the data.
+
+`read_sas()` is better than `read.sas()` because read_sas conforms to tibbler dataframe and retains the column descriptions (aka column labels) in addition to just the variable names
+
+Use the data explorer to filter CNT by SGP to get only Singapore data
+
+`read_sas()` is better than `read.sas()` because read_sas conforms to tibbler dataframe and retains the column descriptions (aka column labels) in addition to just the variable names
+
+Use the data explorer to filter CNT by SGP to get only Singapore data
+
+```{r}
+#| eval: false
+stu_qqq_SG <- stu_qqq %>%
+  filter(CNT == "SGP")
+
+```
+
+write the filtered data into a .rds file
+
+```{r}
+#| eval: false
+write_rds(stu_qqq_SG, "data/stu_qqq_SG.rds")
+
+```
+
+```{r}
+stu_qqq_SG <- read_rds("data/stu_qqq_SG.rds")
+```
+
+-   
+-   
+-   A write-up of not more than 150 words to describe and discuss the patterns reveal by each EDA visualisation prepared.
+
+# References
+
+-   [The City of Engagement: Undestanding the Demographics and Financial Characteristics of its Residents](https://cosmic-boon.netlify.app/take-home_ex/take-home_ex01/take-home_ex1).
+
+-   [Take-home Exercise 1](https://isss608-ay2023-haileycsy.netlify.app/take-home_ex/take-home_ex01/take-home_ex01)

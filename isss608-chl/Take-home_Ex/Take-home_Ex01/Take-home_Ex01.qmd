@@ -1,0 +1,8 @@
+---
+title: "Take-home Exercise 1"
+author: "Chow Hui Ling"
+date: "`r Sys.Date()`"
+date-modified: last-modified
+source: 
+date-format: "DD MMM YYYY"
+---

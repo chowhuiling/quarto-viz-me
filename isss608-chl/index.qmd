@@ -5,3 +5,8 @@ title: "ISSS608-VAA"
 Hello! Welcome to **ISSS608 Visual Analytics and Applications** homepage. In this website, you will find my coursework prepared for this course. Will be adding more along the way.
 
 This website is built using Quarto and powered by Netlify.
+
+## Resources
+
+-   [R for Data Science ed 2](https://r4ds.hadley.nz)
+-   Most of the materials are referenced from the Course website at: <https://isss608-ay2023-24jan.netlify.app/>
