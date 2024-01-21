@@ -39,7 +39,7 @@
     "href": "In-class_Ex/In-class_Ex01/In-class_Ex01.html#version-1",
     "title": "In-class Exercise 1",
     "section": "Version 1",
-    "text": "Version 1\n\nLoading R Packages\nIn this hands-on exercise, two R packages will be used. They are:\n\ntidyverse ; and\nhaven\n\nThe code chunk used is as follows:\n\npacman::p_load(tidyverse,haven)\n\nNote: using pacman::p_load() instead of p_load() allows us to use the p_load libary in pacman package even if pacman is not installed.\nThe code chunk below uses read_sas() of haven to import PISA data into R envionment.\n\nstu_qqq &lt;- read_sas(\"data/cy08msp_stu_qqq.sas7bdat\")\n\nInterpreting the results: 613744 obs. of 1279 variables means there are 613744 observations, with 1279 columns in the data.\nread_sas() is better than read.sas() because read_sas conforms to tibbler dataframe and retains the column descriptions (aka column labels) in addition to just the variable names\nUse the data explorer to filter CNT by SGP to get only Singapore data\nread_sas() is better than read.sas() because read_sas conforms to tibbler dataframe and retains the column descriptions (aka column labels) in addition to just the variable names\nUse the data explorer to filter CNT by SGP to get only Singapore data\n\nstu_qqq_SG &lt;- stu_qqq %&gt;%\n  filter(CNT == \"SGP\")\n\nwrite the filtered data into a .rds file\n\nwrite_rds(stu_qqq_SG, \"data/stu_qqq_SG.rds\")\n\n\nstu_qqq_SG &lt;- read_rds(\"data/stu_qqq_SG.rds\")\n\n\n\n\nA write-up of not more than 150 words to describe and discuss the patterns reveal by each EDA visualisation prepared."
+    "text": "Version 1\n\nLoading R Packages\nIn this hands-on exercise, two R packages will be used. They are:\n\ntidyverse ; and\nhaven\n\nThe code chunk used is as follows:\n\npacman::p_load(tidyverse,haven)\n\nNote: using pacman::p_load() instead of p_load() allows us to use the p_load libary in pacman package even if pacman is not installed.\nThe code chunk below uses read_sas() of haven to import PISA data into R envionment.\n\nstu_qqq &lt;- read_sas(\"data/cy08msp_stu_qqq.sas7bdat\")\n\nInterpreting the results: 613744 obs. of 1279 variables means there are 613744 observations, with 1279 columns in the data.\nread_sas() is better than read.sas() because read_sas conforms to tibbler dataframe and retains the column descriptions (aka column labels) in addition to just the variable names\nUse the data explorer to filter CNT by SGP to get only Singapore data\nread_sas() is better than read.sas() because read_sas conforms to tibbler dataframe and retains the column descriptions (aka column labels) in addition to just the variable names\nUse the data explorer to filter CNT by SGP to get only Singapore data\n\nstu_qqq_SG &lt;- stu_qqq %&gt;%\n  filter(CNT == \"SGP\")\n\nwrite the filtered data into a .rds file\n\nwrite_rds(stu_qqq_SG, \"data/stu_qqq_SG.rds\")\n\n\nstu_qqq_SG &lt;- read_rds(\"data/stu_qqq_SG.rds\")\n\n\n\n\nA write-up of not more than 150 words to describe and discuss the patterns reveal by each EDA visualisation prepared.\n(One visualisation may contain multiple charts in a single patchwork to tell a story)"
   },
   {
     "objectID": "about.html",
@@ -89,5 +89,47 @@
     "title": "ISSS608-VAA",
     "section": "Resources",
     "text": "Resources\n\nR for Data Science ed 2\nMost of the materials are referenced from the Course website at: https://isss608-ay2023-24jan.netlify.app/"
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html",
+    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html",
+    "title": "Take-home Exercise 1",
+    "section": "",
+    "text": "::: panel-tabset # Problem Statement"
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#background-and-context",
+    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#background-and-context",
+    "title": "Take-home Exercise 1",
+    "section": "Background and Context",
+    "text": "Background and Context\nOECD education director Andreas Schleicher shared in a BBC article that “Singapore managed to achieve excellence without wide differences between children from wealthy and disadvantaged families.” (2016) Furthermore, several Singapore’s Minister for Education also started an “every school a good school” slogan. The general public, however, strongly believed that there are still disparities that exist, especially between the elite schools and neighborhood school, between students from families with higher socioeconomic status and those with relatively lower socioeconomic status and immigration and non-immigration families.\nThe 2022 Programme for International Student Assessment (PISA) data was released on December 5, 2022. PISA global education survey every three years to assess the education systems worldwide through testing 15 year old students in the subjects of mathematics, reading, and science."
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#task",
+    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#task",
+    "title": "Take-home Exercise 1",
+    "section": "Task",
+    "text": "Task\nIn this take-home exercise, you are required to use appropriate Exploratory Data Analysis (EDA) methods and ggplot2 functions to reveal:\n\nthe distribution of Singapore students’ performance in mathematics, reading, and science, and\nthe relationship between these performances with schools, gender and socioeconomic status of the students.\n\nLimit your submission to not more than five EDA visualisation.\n\nRequirements\nThe writeup should contain:\n\nA reproducible description of the procedures used to prepare the analytical visualisation. Please refer to the senior submission in the reference section.\nA write-up of not more than 150 words to describe and discuss the patterns revealed by each EDA visualisation prepared."
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#the-data",
+    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#the-data",
+    "title": "Take-home Exercise 1",
+    "section": "The Data",
+    "text": "The Data\nThe PISA 2022 database contains the full set of responses from individual students, school principals and parents. There are a total of five data files and their contents are as follows:\n\nStudent questionnaire data file\nSchool questionnaire data file\nTeacher questionnaire data file\nCognitive item data file\nQuestionnaire timing data file\n\nThese data files are in SAS and SPSS formats. For the purpose of this assignment, you are required to use the Student questionnaire data file only.\nBesides the data files, you will find a collection of complementary materials such as questionnaires, codebooks, compendia and the rescaled indices for trend analyses in this page too.\nTo learn more about PISA 2022 survey, you are encouraged to consult PISA 2022 Technical Report"
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#designing-tools",
+    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#designing-tools",
+    "title": "Take-home Exercise 1",
+    "section": "Designing Tools",
+    "text": "Designing Tools\n\nProcess the data using  tidyverse packages\nStatistical graphics must be prepared using ggplot2 and its extensions."
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#version-1",
+    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#version-1",
+    "title": "Take-home Exercise 1",
+    "section": "Version 1",
+    "text": "Version 1\n\nLoading R Packages\nIn this hands-on exercise, two R packages will be used. They are:\n\ntidyverse ; and\nhaven\n\nThe code chunk used is as follows:\n\npacman::p_load(tidyverse,haven)\n\nNote: using pacman::p_load() instead of p_load() allows us to use the p_load libary in pacman package even if pacman is not installed.\nThe code chunk below uses read_sas() of haven to import PISA data into R envionment.\n\nstu_qqq &lt;- read_sas(\"data/cy08msp_stu_qqq.sas7bdat\")\n\nInterpreting the results: 613744 obs. of 1279 variables means there are 613744 observations, with 1279 columns in the data.\nread_sas() is better than read.sas() because read_sas conforms to tibbler dataframe and retains the column descriptions (aka column labels) in addition to just the variable names\nUse the data explorer to filter CNT by SGP to get only Singapore data\nread_sas() is better than read.sas() because read_sas conforms to tibbler dataframe and retains the column descriptions (aka column labels) in addition to just the variable names\nUse the data explorer to filter CNT by SGP to get only Singapore data\n\nstu_qqq_SG &lt;- stu_qqq %&gt;%\n  filter(CNT == \"SGP\")\n\nwrite the filtered data into a .rds file\n\nwrite_rds(stu_qqq_SG, \"data/stu_qqq_SG.rds\")\n\n\nstu_qqq_SG &lt;- read_rds(\"data/stu_qqq_SG.rds\")\n\n\n\n\nA write-up of not more than 150 words to describe and discuss the patterns reveal by each EDA visualisation prepared.\n(One visualisation may contain multiple charts in a single patchwork to tell a story)"
   }
 ]

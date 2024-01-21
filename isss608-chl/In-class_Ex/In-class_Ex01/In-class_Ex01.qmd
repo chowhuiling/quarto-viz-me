@@ -124,6 +124,7 @@ stu_qqq_SG <- read_rds("data/stu_qqq_SG.rds")
 -   
 -   
 -   A write-up of not more than 150 words to describe and discuss the patterns reveal by each EDA visualisation prepared.
+-   (One visualisation may contain multiple charts in a single patchwork to tell a story)
 
 # References
 
