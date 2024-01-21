@@ -18,7 +18,6 @@ execute:
 
 OECD education director Andreas Schleicher shared in a BBC article that “Singapore managed to achieve excellence without wide differences between children from wealthy and disadvantaged families.” (2016) Furthermore, several Singapore’s Minister for Education also started an “every school a good school” slogan. The general public, however, strongly believed that there are still disparities that exist, especially between the elite schools and neighborhood school, between students from families with higher socioeconomic status and those with relatively lower socioeconomic status and **immigration and non-immigration families**.
 
-
 The 2022 Programme for International Student Assessment (PISA) data was released on December 5, 2022. PISA global education survey every three years to assess the education systems worldwide through testing 15 year old students in the subjects of mathematics, reading, and science.
 
 ## Task
@@ -53,7 +52,7 @@ The [PISA 2022 database](https://www.oecd.org/pisa/data/2022database/) contain
 
 -   Questionnaire timing data file
 
-These data files are in SAS and SPSS formats. For the purpose of this assignment, you are required to use the **Student questionnaire data file only**. 
+These data files are in SAS and SPSS formats. For the purpose of this assignment, you are required to use the **Student questionnaire data file only**.
 
 Besides the data files, you will find a collection of complementary materials such as questionnaires, codebooks, compendia and the rescaled indices for trend analyses in this page too.
 
@@ -79,15 +78,25 @@ In this hands-on exercise, two R packages will be used. They are:
 
 -   [*tidyverse*](https://www.tidyverse.org/) ; and
 -   [*haven*](https://haven.tidyverse.org/reference/index.html)
+-   *ggdist*, for visualising distribution and uncertainty
+-   [*ggridges*](https://wilkelab.org/ggridges/), a ggplot2 extension specially designed for plotting ridgeline plots
+-   *ggthemes*
+-   *colorspace*
 
 The code chunk used is as follows:
 
 ```{r}
-pacman::p_load(tidyverse,haven)
+pacman::p_load(tidyverse,haven,ggdist, ggridges, ggthemes,
+               colorspace)
 
 ```
 
+::: {.callout-tip collapse="true"}
+#### pacman::p_load() vs p_load()
 Note: using `pacman::p_load()` instead of `p_load()` allows us to use the p_load libary in pacman package even if pacman is not installed.
+:::
+
+### Preparing SG dataset
 
 The code chunk below uses [`read_sas()`](https://haven.tidyverse.org/reference/read_sas.html) of [haven](https://haven.tidyverse.org/index.html) to import PISA data into R envionment.
 
@@ -96,16 +105,16 @@ The code chunk below uses [`read_sas()`](https://haven.tidyverse.org/reference/r
 stu_qqq <- read_sas("data/cy08msp_stu_qqq.sas7bdat")
 ```
 
+::: {.callout-tip collapse="true"}
+#### read_sas() vs read.sas()
+
+`read_sas()` is better than `read.sas()` because `read_sas()` conforms to tibbler dataframe and retains the column descriptions (aka column labels) in addition to just the variable names
+:::
+
 Interpreting the results: 613744 obs. of 1279 variables means there are 613744 observations, with 1279 columns in the data.
 
-`read_sas()` is better than `read.sas()` because read_sas conforms to tibbler dataframe and retains the column descriptions (aka column labels) in addition to just the variable names
-
-Use the data explorer to filter CNT by SGP to get only Singapore data
-
-`read_sas()` is better than `read.sas()` because read_sas conforms to tibbler dataframe and retains the column descriptions (aka column labels) in addition to just the variable names
-
-Use the data explorer to filter CNT by SGP to get only Singapore data
-
+Use the data explorer to filter CNT by SGP to get only Singapore data.
+Code chunk below allows us to filter by CNY = SGP
 ```{r}
 #| eval: false
 stu_qqq_SG <- stu_qqq %>%
@@ -113,7 +122,7 @@ stu_qqq_SG <- stu_qqq %>%
 
 ```
 
-write the filtered data into a .rds file
+Code chunk below writes the filtered data into a .rds file
 
 ```{r}
 #| eval: false
@@ -121,13 +130,191 @@ write_rds(stu_qqq_SG, "data/stu_qqq_SG.rds")
 
 ```
 
+Code chunk below allows us to read the data from the .rds file so that we do have have to re-process from the main dataset everytime.
 ```{r}
 stu_qqq_SG <- read_rds("data/stu_qqq_SG.rds")
 ```
 
+### Fields of interest
+
+The suggested computation of ESCS score (i.e. economic, social and cultural status) in PISA 2022 is shown below, whereby HISEI refers to highest parental occupation status, PAREDINT refers to highest education of parent in years, HOMEPOS refers to home possessions. 
+
+![ESCS Score computation](social_economics_fields.png)
+
+The fields of interest for **socioeconomic status** are:
+
+- Profession: ST014/ST015  (Unfortunately not available in dataset)
+- School education: ST005Q01JA (59) /ST007Q01JA (65)
+- Vocational Training: ST006/ST008
+- Home Possessions: ST250, ST251, ST253, ST254, ST255, ST256
+
+Based on the [PISA Data Analysis Manual](https://www.oecd.org/pisa/pisaproducts/pisadataanalysismanualspssandsassecondedition.htm), 
+Fields of interest: 
+
+- Plausible value 1 to 10 in mathematics: PV1MATH, PV2MATH, ..., PV10MATH
+- Plausible value 1 to 10 in reading: PV1READ, PV2READ, ... , PV10READ
+- Plausible value 1 to 10 in science: PV1SCIE, PV2SCIE, ..., PV10SCIE
+
+the relationship between these performances with schools, gender and socioeconomic status of the students.
+
+Fields of interest for **gender**: ST004D01T
+
+immigrants and non-immigrants: fields 74,75,76, 77, 78, 79, 80, 81
+
+```{r}
+#| echo: false
+#| eval: false
+fields_of_interest <- 74:81
+
+# Subset the tibble to include only fields 74 to 81
+subset_stu_qqq_SG <- stu_qqq_SG[, fields_of_interest, drop = FALSE]
+
+# Extract variable information (names and labels) for the subset
+immigrant_fields <- lapply(subset_stu_qqq_SG, function(var) {
+  list(name = names(var), label = attr(var,"label"))
+})
+
+print(immigrant_fields)
+
+# # Combine variable information into a data frame
+# variable_info_df <- data.frame(
+#   VariableName = sapply(variable_info, function(x) x$name),
+#   VariableLabel = sapply(variable_info, function(x) x$label)
+# )
+# 
+# # Print the variable information for fields 80 to 90
+# print(variable_info_df)
+```
+
+- School ID: CNTSCHID
+- Student ID: CNTSTUID
+
+
+Code chunk below was used to view the field and field labels of the data
+
+```{r}
+#| eval: false
+# Extract labels
+variable_labels <- lapply(variable_names, function(var_name) {
+  attr(stu_qqq_SG[[var_name]], "label")
+# #attr_labels <- labelled::labels(stu_qqq_SG[[var_name]])
+# if (!is.null(attr_labels)) {
+#  return(attr_labels$label)
+# } else {
+#  return(NULL)
+#}
+})
+
+
+# Extract variable names
+#variable_names <- names(stu_qqq_SG)
+col_names <- as.list(colnames(stu_qqq_SG))
+```
+
+Code chunk below was used to extract only a subset of the fields for analysis
+```{r}
+
+
+col_name_regex_pv <- "PV\\d+READ|PV\\d+MATH|PV\\d+SCIE" 
+col_name_regex_gender <-"ST004D01T"
+col_name_regex_school <- "CNTSCHID"
+col_name_regex_student_id <- "CNTSTUID"
+col_name_regex_profession <- "ST014*|ST015*"
+col_name_regex_education <- "ST005*|ST007*"
+col_name_regex_vocational_training <- "ST006|ST008"
+col_name_regex_home_possessions <- "ST250|ST251|ST253|ST254|ST255|ST256"
+# Extract columns starting with "PV*"
+
+interested_cols_regex <- paste(col_name_regex_pv, col_name_regex_gender, col_name_regex_school,col_name_regex_student_id,col_name_regex_profession,col_name_regex_education,col_name_regex_vocational_training,col_name_regex_home_possessions, sep = "|")
+  
+#interested_cols_regex <- paste("^(",interested_cols_regex,")")
+columns_to_extract <- grep(interested_cols_regex, colnames(stu_qqq_SG), value = TRUE)
+
+print(columns_to_extract)
+
+# Subset the data frame to include only the selected columns
+subset_fields_stu_qqq_SG <- stu_qqq_SG[, columns_to_extract, drop = FALSE]
+
+# Print the subsetted data frame
+print(subset_fields_stu_qqq_SG)
+
+
+#obtain the average PVs
+math_pv_cols <- grep("^PV\\d+MATH$", colnames(subset_fields_stu_qqq_SG), value = TRUE)
+
+#print(math_pv_cols)
+
+subset_fields_stu_qqq_SG$MATHS <- rowMeans(subset_fields_stu_qqq_SG[, math_pv_cols, drop = FALSE], na.rm = TRUE)
+
+#READ
+read_pv_cols <- grep("^PV\\d+READ$", colnames(subset_fields_stu_qqq_SG), value = TRUE)
+
+print(read_pv_cols)
+
+subset_fields_stu_qqq_SG$READ <- rowMeans(subset_fields_stu_qqq_SG[, read_pv_cols, drop = FALSE], na.rm = TRUE)
+
+#SCIENCE
+science_pv_cols <- grep("^PV\\d+SCIE$", colnames(subset_fields_stu_qqq_SG), value = TRUE)
+
+print(science_pv_cols)
+
+subset_fields_stu_qqq_SG$SCIENCE <- rowMeans(subset_fields_stu_qqq_SG[, science_pv_cols, drop = FALSE], na.rm = TRUE)
+
+
+# Print the updated data frame
+print(subset_fields_stu_qqq_SG)
+
+```
+
+
+Code chunk to display first 5 rows using head()
+```{r}
+head(stu_qqq_SG,5) 
+```
+
+
+### EDA Visualization
+
+```{r}
+#plot PV scores against gender
+
+# ggplot(data=exam_data, 
+#        aes(x= MATHS)) +
+#   geom_histogram(bins=20) +
+#     facet_wrap(~ CLASS)
+
+eda_data <- subset_fields_stu_qqq_SG
+ggplot(data=eda_data, 
+       aes(x = MATHS)) +
+  geom_histogram(bins=20) +
+    fill(~ST004D01T) +
+    ggtitle("Maths score by gender")
+# ) +
+#   geom_density_ridges(
+#     y = ST004D01T,
+#     scale = 3,
+#     rel_min_height = 0.01,
+#     bandwidth = 3.4,
+#     fill = lighten("#7097BB", .3),
+#     color = "white"
+#   ) +
+  # scale_x_discrete(
+  #   name = "Maths grades",
+  #   expand = c(0, 0)
+  #   ) +
+  # scale_y_discrete(name = NULL, expand = expansion(add = c(0.2, 2.6))) +
+  # theme_ridges()
+```
+
+
+
+::: panel-tabset
+
+
 -   
-- 
+
 -   A write-up of not more than 150 words to describe and discuss the patterns reveal by each EDA visualisation prepared.
+
 -   (One visualisation may contain multiple charts in a single patchwork to tell a story)
 
 # References
@@ -135,5 +322,4 @@ stu_qqq_SG <- read_rds("data/stu_qqq_SG.rds")
 -   [The City of Engagement: Undestanding the Demographics and Financial Characteristics of its Residents](https://cosmic-boon.netlify.app/take-home_ex/take-home_ex01/take-home_ex1).
 
 -   [Take-home Exercise 1](https://isss608-ay2023-haileycsy.netlify.app/take-home_ex/take-home_ex01/take-home_ex01)
-
 :::
