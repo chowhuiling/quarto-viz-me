@@ -1,0 +1,195 @@
+---
+title: "Take-home Exercise 3"
+format: html
+editor: visual
+author: "Chow Hui Ling"
+date: "17 Feb 2024"
+date-modified: last-modified
+date-format: "DD MMM YYYY"
+
+execute: 
+  eval: true
+  echo: true
+  warning: false
+---
+
+## Take Home Exercise 3
+
+::: panel-tabset
+# Problem Description
+
+## Overview
+
+According to an office report as shown in the infographic below,
+
+-   Daily mean temperature are projected to increase by 1.4 to 4.6, and
+-   The contrast between the wet months (November to January) and dry month (February and June to September) is likely to be more pronounced.
+
+![Reference Climate report infographic](Climate_change.jpg)
+
+## The Task
+
+In this take-home exercise, you are required to:
+
+Select a weather station and download historical daily temperature or rainfall data from Meteorological Service Singapore website,
+Select either daily temperature or rainfall records of a month of the year 1983, 1993, 2003, 2013 and 2023 and create an analytics-driven data visualisation,
+Apply appropriate interactive techniques to enhance the user experience in data discovery and/or visual story-telling.
+
+# Solution
+
+## Selected Data for Analysis
+Daily Temperature of January in the years 1983, 1993, 2003, 2013, 2023 in Changi Station.
+
+Changi Station is selected as it contains all the temperature data (mean, max, min) all the way from 1982 to current according to [the Station Records](https://www.weather.gov.sg/wp-content/uploads/2022/06/Station_Records.pdf).
+
+## Data Preparation
+
+The data is retrieved from [*http://www.weather.gov.sg/files/dailydata/DAILYDATA_S\<STN\>\_YYYYMM.csv*]{.underline}*,* where \<STN\> represents the location of the stations and YYYY is the year and MM is the month. `STN` for Changi is 24. Below is the code used to retrieve the csv files:
+
+First, install and load the required package: 
+- `curl` for downloading csv files from website
+- `tidyverse` for data manipulation
+```{r}
+#| eval: false
+# Install and load the required packages
+pacman::p_load(curl, tidyverse)
+```
+
+
+
+Next, download the csv files into the data folder (the data folder should be available):
+```{r}
+#| eval: false
+
+# Set the base URL template
+base_url <- "http://www.weather.gov.sg/files/dailydata/"
+
+# Create a function to crawl and save data
+download_and_save <- function(stn, yyyymm) {
+  # Construct the URL
+  csv_url <- paste0(base_url, "DAILYDATA_S",stn,"_",yyyymm,".csv")
+
+  # Specify the local path where you want to save the downloaded file
+  local_path <- sub(base_url, "data/", csv_url)
+  
+  # Use curl_download to download the file
+  curl_download(url = csv_url, destfile = local_path, quiet = FALSE)
+  return (local_path)
+}
+#initialize empty vector to add the local paths of downloaded csvs
+csv_paths = c()
+# Loop over year and month values
+
+for (year in seq(1983,2023, by=10)) {
+  for (month in 01) {
+    if (month < 10) {
+      mth <- paste("0",month, sep="")
+    }
+    else {
+      mth <- month
+    }
+    yyyymm <- paste(year,mth,sep = "")
+    csv_paths <- append(csv_paths, download_and_save(stn = "24", yyyymm = yyyymm))
+  } #end loop month
+} # end loop year
+csv_paths
+```
+
+Then, load the data from the csv files. Here we need to set the `locale` to use `encoding="WINDOWS-1252"`, in order to avoid the encoding error that results in `invalid multibyte string` error. Also ignore Rainfall and Wind columns. 
+Below code chunk does not work because the files have slightly different column naming conventions.
+```{r}
+#the below code doesn't work because some columns are not named exactly the same.
+input_data <- read_csv(csv_urls, 
+                       id = "file",
+                       col_select = -contains(c("ainfall","Wind")),
+                       locale = locale(encoding="WINDOWS-1252")
+                       )
+#input_data
+# 
+# # Use the first csv to determine the column types, skipping the rainfall column
+# data <- read_csv(csv_paths[1],
+#                  col_select = -contains(c("ainfall")),
+#                  locale = locale(encoding="WINDOWS-1252")
+#                  )
+# print(colnames(data))
+# 
+# head(data,5)
+```
+This code chunk below is used instead. We loop through the filepaths and read the csvs using certain locale, specifying only certain columns. Columns are renamed for ease of analysis and an additional date field is added. The dataset obtained are merged using `dplyr::bind_rows` and stored as `cleaned_df`.
+```{r}
+#instead, we try to read one by one and skip the problematic rainfall columns.
+read_csv_skip_rainfall <- function(path) {
+
+# # Adding index column 
+# data <- data[with(data, order(Year, Day)), ]
+# data$Index <- seq(from=1, to=nrow(data))
+# 
+# head(data, 5)
+  
+  
+  
+  temp_data <- read_csv(path,
+                   col_select = -contains(c("ainfall","Wind")),
+                   locale = locale(encoding="WINDOWS-1252")
+                          )
+  #normalise the column names and replace the weird characters
+  old_colnames <- colnames(temp_data)
+  print(old_colnames)
+  new_colnames <- gsub(pattern="[Â°C\\)]| \\(", replacement="", colnames(temp_data))
+  new_colnames <- tolower(gsub(pattern=" ", 
+                               replacement = "_", 
+                               x = new_colnames, 
+                               perl = FALSE))
+  #print(new_colnames)
+  colnames(temp_data) <- new_colnames
+  
+  
+  #print(temp_data)
+  #print(spec(temp_data))
+  problems(temp_data)
+  
+  # Add date column 
+  temp_data$date <- as.Date(with(temp_data, paste(year, month, day,sep="-")), "%Y-%m-%d")
+
+  head(temp_data,5)
+  return (temp_data)
+}
+
+# Read and process each CSV file
+list_of_dataframes <- lapply(csv_paths, read_csv_skip_rainfall)
+cleaned_df <- dplyr::bind_rows(list_of_dataframes)
+
+print(cleaned_df)
+```
+
+
+```{r}
+csv_files <- list.files(path = "data/", pattern = "\\.csv$", full.names = TRUE)
+
+# Use purrr::map_df to read and bind all CSV files into a single dataset
+#temp_dataset <- map_df(csv_files, read_csv)
+
+
+#internal_read_csv <- function(csv) read_csv(file = csv,
+#                                           locale = locale(encoding="WINDOWS-1252")
+#                                           ) %>%
+                                  
+
+#temperature_dataset <- map_df(csv_files,internal_read_csv)
+
+#str(temperature_dataset)
+
+for (csv_file in csv_files) {
+   data_frames_list[[csv_file]] <- read_csv(file = csv_file,
+                                            locale = locale(encoding="WINDOWS-1252")
+                                            )
+   print(spec(data_frames_list))
+   }
+ 
+ print(str(data_frames_list))
+```
+
+## Selection of visualisation techniques used
+
+## Data visualisation design and interactivity principles and best practices implemented
+:::
