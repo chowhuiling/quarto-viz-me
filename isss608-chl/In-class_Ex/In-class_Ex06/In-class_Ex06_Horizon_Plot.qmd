@@ -2,7 +2,7 @@
 title: "Horizon Plot"
 author: "Chow Hui Ling"
 
-date: "24/2/2024"
+date: "24 Feb 2024"
 date-modified: last-modified
 date-format: "DD MMM YYYY"
 
