@@ -6,3 +6,8 @@
 
 /.quarto/
 data/
+
+#tableau files
+*.twb
+*.twbr
+*.hyper
