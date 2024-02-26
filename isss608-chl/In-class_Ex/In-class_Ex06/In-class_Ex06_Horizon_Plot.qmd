@@ -1,0 +1,104 @@
+---
+title: "Horizon Plot"
+author: "Chow Hui Ling"
+
+date: "24/2/2024"
+date-modified: last-modified
+date-format: "DD MMM YYYY"
+
+format: html
+execute: 
+  echo: false
+  eval: false
+  warning: false
+  message: false
+  freeze: true
+---
+
+# Getting started
+
+In this section, you will learn how to plot a [horizon graph](http://www.perceptualedge.com/articles/visual_business_intelligence/time_on_the_horizon.pdf) by using [**ggHoriPlot**](https://rivasiker.github.io/ggHoriPlot/index.html) package.
+
+::: callout-tip
+Before getting started, please visit [Getting Started](https://rivasiker.github.io/ggHoriPlot/articles/ggHoriPlot.html) to learn more about the functions of ggHoriPlot package. Next, read [`geom_horizon()`](https://rivasiker.github.io/ggHoriPlot/reference/geom_horizon.html) to learn more about the usage of its arguments.
+:::
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+pacman::p_load(ggHoriPlot, ggthemes, tidyverse)
+```
+
+
+### Step 1: Data Import
+
+For the purpose of this hands-on exercise, [Average Retail Prices Of Selected Consumer Items](https://tablebuilder.singstat.gov.sg/table/TS/M212891) will be used.
+
+Use the code chunk below to import the AVERP.csv file into R environment.
+
+```{r}
+averp <- read_csv("data/AVERP.csv") %>%
+  mutate(`Date` = dmy(`Date`))
+
+spec(averp)
+```
+
+::: callout-tip
+# Thing to learn from the code chunk above.
+
+-   By default, read_csv will import data in Date field as Character data type. [`dmy()`](https://lubridate.tidyverse.org/reference/ymd.html) of [**lubridate**](https://lubridate.tidyverse.org/index.html) package to palse the Date field into appropriate Date data type in R.
+:::
+
+```{r}
+#| echo: false
+#| eval: false
+averp %>% 
+  filter(Date >= "2018-01-01") %>%
+  ggplot(aes(x = Date, y = Values,
+          group = `Consumer Items`,
+          color = `Consumer Items`)) + 
+  geom_line() +
+  theme(legend.position="none")
+```
+
+### Step 2: Plotting the horizon graph
+
+Next, the code chunk below will be used to plot the horizon graph.
+Take note that we added `#| fig-width: 12` and `#| fig-width: 10` to control the size of the figure
+
+```{r}
+#| fig-width: 12
+#| fig-height: 10
+averp %>% 
+  filter(Date >= "2018-01-01") %>%
+  ggplot() +
+  geom_horizon(aes(x = Date, y=Values), 
+               origin = "midpoint", 
+               horizonscale = 6)+
+  facet_grid(`Consumer Items`~.) +
+    theme_few() +
+  scale_fill_hcl(palette = 'RdBu') +
+  theme(panel.spacing.y=unit(0, "lines"), strip.text.y = element_text(
+    size = 5, angle = 0, hjust = 0),
+    legend.position = 'none',
+    axis.text.y = element_blank(),
+    axis.text.x = element_text(size=7),
+    axis.title.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.ticks.y = element_blank(),
+    panel.border = element_blank()
+    ) +
+    scale_x_date(expand=c(0,0), date_breaks = "3 month", date_labels = "%b%y") +
+  ggtitle('Average Retail Prices of Selected Consumer Items (Jan 2018 to Dec 2022)')
+```
+
+Alternative method to use:
+
+```{r}
+attacks <- attacks %>%
+  mutate(wkday = lubridate::wday(timestamp,
+                                 label = TRUE,
+                                 abbr = FALSE),
+         hour = lubridate::hour(timestamp))
+
+```

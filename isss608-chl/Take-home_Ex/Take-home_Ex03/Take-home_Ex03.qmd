@@ -31,13 +31,12 @@ According to an office report as shown in the infographic below,
 
 In this take-home exercise, you are required to:
 
-Select a weather station and download historical daily temperature or rainfall data from Meteorological Service Singapore website,
-Select either daily temperature or rainfall records of a month of the year 1983, 1993, 2003, 2013 and 2023 and create an analytics-driven data visualisation,
-Apply appropriate interactive techniques to enhance the user experience in data discovery and/or visual story-telling.
+Select a weather station and download historical daily temperature or rainfall data from Meteorological Service Singapore website, Select either daily temperature or rainfall records of a month of the year 1983, 1993, 2003, 2013 and 2023 and create an analytics-driven data visualisation, Apply appropriate interactive techniques to enhance the user experience in data discovery and/or visual story-telling.
 
 # Solution
 
 ## Selected Data for Analysis
+
 Daily Temperature of January in the years 1983, 1993, 2003, 2013, 2023 in Changi Station.
 
 Changi Station is selected as it contains all the temperature data (mean, max, min) all the way from 1982 to current according to [the Station Records](https://www.weather.gov.sg/wp-content/uploads/2022/06/Station_Records.pdf).
@@ -47,17 +46,20 @@ Changi Station is selected as it contains all the temperature data (mean, max, m
 The data is retrieved from [*http://www.weather.gov.sg/files/dailydata/DAILYDATA_S\<STN\>\_YYYYMM.csv*]{.underline}*,* where \<STN\> represents the location of the stations and YYYY is the year and MM is the month. `STN` for Changi is 24. Below is the code used to retrieve the csv files:
 
 First, install and load the required package: 
-- `curl` for downloading csv files from website
-- `tidyverse` for data manipulation
-```{r}
-#| eval: false
+- `curl` for downloading csv files from website 
+- `tidyverse` for data manipulation 
+- `lubridate` for extracting week and day numbers from date field
+- `ggthemes` is to remove chart junk
+- `patchwork` is to combine multiple plots into one
+- `ggiraph` for inteeractive plot
+
+```{r} 
 # Install and load the required packages
-pacman::p_load(curl, tidyverse)
+pacman::p_load(curl, tidyverse, knitr, lubridate, ggthemes, patchwork, ggiraph)
 ```
 
-
-
 Next, download the csv files into the data folder (the data folder should be available):
+
 ```{r}
 #| eval: false
 
@@ -76,6 +78,7 @@ download_and_save <- function(stn, yyyymm) {
   curl_download(url = csv_url, destfile = local_path, quiet = FALSE)
   return (local_path)
 }
+
 #initialize empty vector to add the local paths of downloaded csvs
 csv_paths = c()
 # Loop over year and month values
@@ -95,11 +98,22 @@ for (year in seq(1983,2023, by=10)) {
 csv_paths
 ```
 
-Then, load the data from the csv files. Here we need to set the `locale` to use `encoding="WINDOWS-1252"`, in order to avoid the encoding error that results in `invalid multibyte string` error. Also ignore Rainfall and Wind columns. 
-Below code chunk does not work because the files have slightly different column naming conventions.
+Then, load the data from the csv files. We use the following code chunk to determine the filenames that need to be loaded:
+
 ```{r}
+csv_files = list.files(path = "data", pattern = "\\.csv$", full.names = TRUE)
+
+csv_files
+  
+
+```
+
+Here we need to set the `locale` to use `encoding="WINDOWS-1252"`, in order to avoid the encoding error that results in `invalid multibyte string` error. Also ignore Rainfall and Wind columns. Below code chunk does not work because the files have slightly different column naming conventions.
+
+```{r}
+#| eval: false
 #the below code doesn't work because some columns are not named exactly the same.
-input_data <- read_csv(csv_urls, 
+input_data <- read_csv(csv_files, 
                        id = "file",
                        col_select = -contains(c("ainfall","Wind")),
                        locale = locale(encoding="WINDOWS-1252")
@@ -115,7 +129,9 @@ input_data <- read_csv(csv_urls,
 # 
 # head(data,5)
 ```
+
 This code chunk below is used instead. We loop through the filepaths and read the csvs using certain locale, specifying only certain columns. Columns are renamed for ease of analysis and an additional date field is added. The dataset obtained are merged using `dplyr::bind_rows` and stored as `cleaned_df`.
+
 ```{r}
 #instead, we try to read one by one and skip the problematic rainfall columns.
 read_csv_skip_rainfall <- function(path) {
@@ -134,7 +150,7 @@ read_csv_skip_rainfall <- function(path) {
                           )
   #normalise the column names and replace the weird characters
   old_colnames <- colnames(temp_data)
-  print(old_colnames)
+  #print(old_colnames)
   new_colnames <- gsub(pattern="[Â°C\\)]| \\(", replacement="", colnames(temp_data))
   new_colnames <- tolower(gsub(pattern=" ", 
                                replacement = "_", 
@@ -146,50 +162,119 @@ read_csv_skip_rainfall <- function(path) {
   
   #print(temp_data)
   #print(spec(temp_data))
-  problems(temp_data)
+  #problems(temp_data)
   
   # Add date column 
   temp_data$date <- as.Date(with(temp_data, paste(year, month, day,sep="-")), "%Y-%m-%d")
 
-  head(temp_data,5)
+  #review structure of the data
   return (temp_data)
 }
 
 # Read and process each CSV file
-list_of_dataframes <- lapply(csv_paths, read_csv_skip_rainfall)
+list_of_dataframes <- lapply(csv_files, read_csv_skip_rainfall)
 cleaned_df <- dplyr::bind_rows(list_of_dataframes)
-
-print(cleaned_df)
-```
-
-
-```{r}
-csv_files <- list.files(path = "data/", pattern = "\\.csv$", full.names = TRUE)
-
-# Use purrr::map_df to read and bind all CSV files into a single dataset
-#temp_dataset <- map_df(csv_files, read_csv)
-
-
-#internal_read_csv <- function(csv) read_csv(file = csv,
-#                                           locale = locale(encoding="WINDOWS-1252")
-#                                           ) %>%
-                                  
-
-#temperature_dataset <- map_df(csv_files,internal_read_csv)
-
-#str(temperature_dataset)
-
-for (csv_file in csv_files) {
-   data_frames_list[[csv_file]] <- read_csv(file = csv_file,
-                                            locale = locale(encoding="WINDOWS-1252")
-                                            )
-   print(spec(data_frames_list))
-   }
- 
- print(str(data_frames_list))
+kable(head(cleaned_df))
+#print(cleaned_df)
 ```
 
 ## Selection of visualisation techniques used
 
-## Data visualisation design and interactivity principles and best practices implemented
+To determine if there are any trends in changes in daily temperature, we use violin plot to show the min, mean and max of temperatures. The median of each temperature statistic is shown in as a line in the violin plot.
+
+```{r}
+
+#TODO: verify how to add the mean and median labels
+
+ggplot(data=cleaned_df,
+       aes(x=as.factor(year))) +
+       geom_violin(aes(y=mean_temperature, group=year, color="Mean", fill="Mean"),
+                    alpha=0.5, draw_quantiles = c(0.5), 
+                    position = position_dodge(width = 0.75)) +
+      geom_violin(alpha=0.5, draw_quantiles = c(0.5),  
+                   aes(y=maximum_temperature, group=year, color="Max", fill="Max"),
+                   position = position_dodge(width = 0.75)) +
+      geom_violin(alpha=0.5, draw_quantiles = c(0.5), 
+                   aes(y=minimum_temperature, group = year, color="Min", fill="Min"),
+                   position = position_dodge(width = 0.75)) +
+      
+  #    stat_summary(aes(y = maximum_temperature, group = year), geom = "pointrange", fun = "median", color = "black", size = 0.11, width = 0.2) +
+  stat_summary(aes(y=maximum_temperature,group = year), geom = "crossbar", fun = "mean", color = "black", size = 1, width = 0.2) +
+#  stat_summary(aes(y= maximum_temperature,group = year), geom = "crossbar", fun = function(x) quantile(x, 0.75), color = "Max", size = 1, width = 0.2) +
+#   stat_summary(aes(y=maximum_temperature, group=group, label = sprintf("Median: %.2f", median(maximum_temperature))), geom = "text", vjust = -1, color = "black", size = 3) +
+#  stat_summary(aes(y=maximum_temperature, group=year, label = sprintf("Mean: %.2f", mean(..y..))),fun="mean", geom = "text", vjust = 1, color = "red", size = 3) +
+  
+  labs(title = "Mean, Min, and Max Daily Temperatures in January for each year",
+       x = "Year",
+       y = "Temperature (°C)", 
+       fill = "Daily Temperature Stats",
+       color = "Daily Temperature Stats"
+       ) +
+  scale_fill_manual(values = c("Min" = "lightblue", "Mean" = "lightgreen", "Max" = "lightcoral"), name = "Year") +
+  scale_y_continuous(breaks = seq(0, max(cleaned_df$maximum_temperature), by = 1))+
+  #combine the color and fill as a single legend
+  guides(fill = guide_legend(title = "Daily Temperature Stats")) +
+  theme_minimal()
+```
+
+When we look at the plot, we notice that the mean, max and min daily temperatures seem to be overlapping increasingly over the years (i.e. the total area of overlap between two or more colours is increasing) from 1983 to 2023. In 2013 and 2023, the minimum daily temperature of hotter days can be hotter than the maximum daily temperature of colder days. This suggests that in a single month, the daily temperatures can vary over a wide range and is less predictable than before, as compared to 1983, when the min, mean and max daily temperatures were more distinct. In Jan 2023, we can also see that the mean and max temperatures are becoming more rectangular, which suggests that there is decreasing variant in the mean and max daily temperatures.
+
+Note that we do not know when are the colder days in the month from this plot, and we cannot confirm whether the colder weather from Dec is coming later in Jan. If that hypothesis is true, the first few days of the month should be when the colder days occur.
+
+To investigate further, we plot a calendar heatmap chart to represent the mean, max and min temperature of the different days. We can hover over the tiles to find the temperatures that are the same as the chosen tile.
+
+Note: The wday() and week() functions from the lubridate package are used to extract the day of the week and week number, respectively. We also added in the hover effect so we can see the tooltip of actual temperature.
+
+```{r}
+
+generate_tooltip <- function(){
+  
+}
+
+plot_calendar_heatmap <- function (df, temperature_type, desc)  {
+  temperature_plot <- ggplot(df, 
+                             aes(x = lubridate::wday(date,TRUE),
+                                 y = week(date), 
+                                 fill = temperature_type,                              tooltip=paste0(date,"\n", temperature_type,"°C"))
+                             ) +                              geom_tile_interactive(color="white", size=0.1, data_id = temperature_type) +
+  
+    coord_equal() +
+    scale_fill_gradient(low = "light grey", high = "red", na.value = "white") +
+  facet_wrap(~year, ncol = 5) +
+  labs(title = paste( desc, "Daily Temperature for each Year"),
+       x = "Day of Week",
+       y = "Week" ,
+       fill = "Temperature (°C)") +
+    theme_tufte() + 
+  theme(axis.ticks = element_blank(),
+        plot.title = element_text(hjust=0.5),
+        axis.text.x = element_text(angle = 45, hjust = 1, size = 6),
+        legend.title = element_text(size=8),
+        legend.text = element_text(size=6),
+        legend.position = "none")
+  
+  return (temperature_plot)
+}
+
+#combine the 3 plots with a common legend at the side
+combined_plot <- (plot_calendar_heatmap (cleaned_df, cleaned_df$mean_temperature, "Mean") + 
+plot_calendar_heatmap (cleaned_df, cleaned_df$minimum_temperature, "Minumum") +
+plot_calendar_heatmap (cleaned_df, cleaned_df$maximum_temperature, "Maximum") +
+  plot_layout(guides = "collect", axes = "collect", ncol = 1, heights = c(1,1,1)) +
+  theme(legend.position = "right")
+)
+
+girafe(code = print(combined_plot),
+       options = list(
+         opts_hover(css="stroke-width: 2px; stroke-height:2px")#,
+         #opts_hover_inv(css="opacity:0.2;")
+       )
+)
+```   
+We observe that the cooler days in 2023 are actually towards the end of January, which is hard to explain. More data would probably need to be plotted between 2013 and 2023, and probably over the various months to see if there are any trends in the mean, min and max daily temperatures.
+
+
+
+
+<!-- ## Data visualisation design and interactivity principles and best practices implemented -->
 :::

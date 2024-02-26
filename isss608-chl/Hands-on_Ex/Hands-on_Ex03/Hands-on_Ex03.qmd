@@ -1,8 +1,9 @@
 ---
 title: "Hands-on Exercise 3: Interactivity in Visual Analytics"
 author: "Chow Hui Ling"
-date: "14/2/2024"
+date: "25 Feb 2024"
 date-modified: "last-modified"
+date-format: "DD MMM YYYY"
 
 execute: 
   eval: true
@@ -53,7 +54,7 @@ The code chunk below `read_csv()` of **readr** package is used to import *exam_d
 ```{r}
 exam_data <- read.csv("../Hands-on_Ex01/data/Exam_data.csv")
 
-exam_data
+head(exam_data)
 ```
 :::
 

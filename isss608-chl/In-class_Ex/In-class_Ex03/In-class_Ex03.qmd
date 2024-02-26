@@ -1,0 +1,22 @@
+---
+title: "In-class Exercise 3"
+author: "Chow Hui Ling"
+date: "27 Jan 2023"
+
+date-modified: "last-modified"
+date-format: "DD MMM YYYY"
+execute: 
+  eval: true
+  echo: true
+  warning: false
+---
+
+# In Class Exercise 3 - Tableau
+
+## Dashboard, Stories etc. can be found at:
+
+-   <https://public.tableau.com/app/profile/chow.hui.ling/viz/In-classExercise3-SuperstoreSalesandProfitReport_17063373718010/Dashboard1>
+
+-   <https://public.tableau.com/app/profile/chow.hui.ling/viz/In-classExercise3-SuperstoreSalesandProfitStory_17063377325780/SuperstoreSalesandProfitStory>
+
+-   <https://public.tableau.com/app/profile/chow.hui.ling/viz/In-classex03b-MathsvsEnglishScatterplotwithmarginalboxplot/Dashboard1>

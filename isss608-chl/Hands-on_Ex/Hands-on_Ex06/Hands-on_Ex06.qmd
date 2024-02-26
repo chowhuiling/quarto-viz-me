@@ -1,5 +1,6 @@
 ---
 title: "Hands-on Ex 6 -- Visualising and Analysing Time-oriented Data"
+Author: Chow Hui Ling
 date: "24/2/2024"
 date-modified: last-modified
 date-format: "DD MMM YYYY"
@@ -9,9 +10,13 @@ execute:
   echo: true
   eval: true
   warning: false
-  freeze: auto
+  freeze: true
 editor: visual 
 ---
+
+::: callout-note
+Note: Contents of this page are referenced from instructor's materials: [17 Visualising and Analysing Time-oriented Data](https://r4va.netlify.app/chap07)
+:::
 
 ## Learning Outcome
 
@@ -43,7 +48,7 @@ pacman::p_load(scales, viridis, lubridate, ggthemes, gridExtra, readxl, knitr, d
 
 In this section, you will learn how to plot a calender heatmap programmatically by using ggplot2 package.
 
-![](chap17/img/image01.png)
+![](img/image01.png)
 
 By the end of this section, you will be able to:
 
@@ -77,7 +82,7 @@ kable(head(attacks))
 There are three columns, namely *timestamp*, *source_country* and *tz*.
 
 -   *timestamp* field stores date-time values in POSIXct format.
--   *source_country* field stores the source of the attack. It is in *ISO 3166-1 alpha-2* country code.\
+-   *source_country* field stores the source of the attack. It is in *ISO 3166-1 alpha-2* country code.
 -   *tz* field stores time zone of the source IP address.
 
 ```{r echo=FALSE}
@@ -209,7 +214,7 @@ Then we can simply group the count by hour and wkday and plot it, since we know 
 
 **Challenge:** Building multiple heatmaps for the top four countries with the highest number of attacks.
 
-![](chap17/img/image02.png)
+![](img/image02.png)
 
 ### Plotting Multiple Calendar Heatmaps
 
@@ -218,7 +223,7 @@ Step 1: Deriving attack by country object
 In order to identify the top 4 countries with the highest number of attacks, you are required to do the followings:
 
 -   count the number of attacks by country,
--   calculate the percent of attackes by country, and
+-   calculate the percent of attacks by country, and
 -   save the results in a tibble data frame.
 
 ```{r}
@@ -273,7 +278,7 @@ ggplot(top4_attacks,
 
 In this section, you will learn how to plot a cycle plot showing the time-series patterns and trend of visitor arrivals from Vietnam programmatically by using ggplot2 functions.
 
-![](chap17/img/image03.png)
+![](img/image03.png)
 
 ### Step 1: Data Import
 

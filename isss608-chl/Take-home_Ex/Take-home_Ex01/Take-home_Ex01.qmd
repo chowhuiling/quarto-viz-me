@@ -249,20 +249,20 @@ subset_fields_stu_qqq_SG$MATHS <- rowMeans(subset_fields_stu_qqq_SG[, math_pv_co
 #READ
 read_pv_cols <- grep("^PV\\d+READ$", colnames(subset_fields_stu_qqq_SG), value = TRUE)
 
-print(read_pv_cols)
+# print(read_pv_cols)
 
 subset_fields_stu_qqq_SG$READ <- rowMeans(subset_fields_stu_qqq_SG[, read_pv_cols, drop = FALSE], na.rm = TRUE)
 
 #SCIENCE
 science_pv_cols <- grep("^PV\\d+SCIE$", colnames(subset_fields_stu_qqq_SG), value = TRUE)
 
-print(science_pv_cols)
+# print(science_pv_cols)
 
 subset_fields_stu_qqq_SG$SCIENCE <- rowMeans(subset_fields_stu_qqq_SG[, science_pv_cols, drop = FALSE], na.rm = TRUE)
 
 
 # Print the updated data frame
-print(subset_fields_stu_qqq_SG)
+# print(subset_fields_stu_qqq_SG)
 
 ```
 
@@ -305,7 +305,7 @@ ggplot(data=eda_data,
   # scale_y_discrete(name = NULL, expand = expansion(add = c(0.2, 2.6))) +
   # theme_ridges()
 ```
-
+:::
 
 
 ::: panel-tabset
