@@ -8,8 +8,8 @@ date-format: "DD MMM YYYY"
 
 format: html
 execute: 
-  echo: false
-  eval: false
+  echo: true
+  eval: true
   warning: false
   message: false
   freeze: true
@@ -92,9 +92,10 @@ averp %>%
   ggtitle('Average Retail Prices of Selected Consumer Items (Jan 2018 to Dec 2022)')
 ```
 
-Alternative method to use:
+Alternative method to use for breaking down into weekday and time:
 
 ```{r}
+#| eval: false
 attacks <- attacks %>%
   mutate(wkday = lubridate::wday(timestamp,
                                  label = TRUE,
