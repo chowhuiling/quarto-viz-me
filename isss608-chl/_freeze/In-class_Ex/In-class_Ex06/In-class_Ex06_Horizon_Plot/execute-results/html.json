@@ -1,0 +1,15 @@
+{
+  "hash": "fc99a648dd65e281d04e4aea962e2fe4",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Horizon Plot\"\nauthor: \"Chow Hui Ling\"\n\ndate: \"24 Feb 2024\"\ndate-modified: last-modified\ndate-format: \"DD MMM YYYY\"\n\nformat: html\nexecute: \n  echo: false\n  eval: false\n  warning: false\n  message: false\n  freeze: true\n---\n\n\n# Getting started\n\nIn this section, you will learn how to plot a [horizon graph](http://www.perceptualedge.com/articles/visual_business_intelligence/time_on_the_horizon.pdf) by using [**ggHoriPlot**](https://rivasiker.github.io/ggHoriPlot/index.html) package.\n\n::: callout-tip\nBefore getting started, please visit [Getting Started](https://rivasiker.github.io/ggHoriPlot/articles/ggHoriPlot.html) to learn more about the functions of ggHoriPlot package. Next, read [`geom_horizon()`](https://rivasiker.github.io/ggHoriPlot/reference/geom_horizon.html) to learn more about the usage of its arguments.\n:::\n\n\n::: {.cell}\n\n:::\n\n\n\n### Step 1: Data Import\n\nFor the purpose of this hands-on exercise, [Average Retail Prices Of Selected Consumer Items](https://tablebuilder.singstat.gov.sg/table/TS/M212891) will be used.\n\nUse the code chunk below to import the AVERP.csv file into R environment.\n\n\n::: {.cell}\n\n:::\n\n\n::: callout-tip\n# Thing to learn from the code chunk above.\n\n-   By default, read_csv will import data in Date field as Character data type. [`dmy()`](https://lubridate.tidyverse.org/reference/ymd.html) of [**lubridate**](https://lubridate.tidyverse.org/index.html) package to palse the Date field into appropriate Date data type in R.\n:::\n\n\n::: {.cell}\n\n:::\n\n\n### Step 2: Plotting the horizon graph\n\nNext, the code chunk below will be used to plot the horizon graph.\nTake note that we added `#| fig-width: 12` and `#| fig-width: 10` to control the size of the figure\n\n\n::: {.cell}\n\n:::\n\n\nAlternative method to use:\n\n\n::: {.cell}\n\n:::",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
