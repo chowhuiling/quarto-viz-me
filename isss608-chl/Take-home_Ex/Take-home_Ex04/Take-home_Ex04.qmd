@@ -43,8 +43,9 @@ The panel is split into (i) data filter left menu and (ii) main chart area on th
 Below shows a sample layout of the application:
 
 ### Install Required Libraries
+
 ```{r}
-pacman::p_load(nycflights13)
+
 pacman::p_load(ggplot2, dplyr, ggiraph)
 pacman::p_load(ggHoriPlot, ggthemes, tidyverse)
 ```
@@ -67,6 +68,7 @@ data
 ```
 
 ### Data Preparation
+
 ```{r}
 
 #define a function to read the csv files and convert the correct data
@@ -82,6 +84,7 @@ read_the_csv <- function (csv_files) {
 }
 
 ```
+
 ```{r}
 #| eval: false
 
@@ -121,6 +124,7 @@ write_csv(combined_data, "data/combined_data.csv")
 
 
 ```
+
 ```{r}
 #Read the data from combined csv
 weather_data <- read_the_csv("data/combined_data.csv") %>%
@@ -145,10 +149,8 @@ problems(weather_data)
 weather_data
 colnames(weather_data)
 ```
+
 ### Data visualisation
-
-
-
 
 ```{r}
 generate_cycle_plot <- function(data, start_date, end_date, selected_stations, show_mean_temp=TRUE, show_min_temp = TRUE, show_max_temp = TRUE) {
@@ -289,12 +291,12 @@ generate_cycle_plot <- function(data, start_date, end_date, selected_stations, s
   )
 } # end function generate_cycle_plot
 
-weather_data
+
 generate_cycle_plot(weather_data, ymd("2000-01-01"),ymd("2020-12-31"), c("Admiralty", "Changi"))
 ```
 
-
 ### Horizon plot
+
 ```{r}
 #| fig-height: 12
 #| fig-width: 10
@@ -328,10 +330,10 @@ generate_horizon_plot <- function(df, field) {
 generate_horizon_plot(df=weather_data,"Mean Temperature")
 ```
 
-
 ```{r}
 weather_data
 ```
+
 ```{r}
 library(ggplot2)
 library(dplyr)
