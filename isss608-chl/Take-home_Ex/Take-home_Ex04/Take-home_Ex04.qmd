@@ -118,7 +118,7 @@ while (length(stn <- readLines(stn_file_conn, n = 1, warn = FALSE)) > 0){
 combined_data <- bind_rows(data_list)
 
 # We also write the combined data to a CSV file so it is easier to read subsequently
-write_csv(combined_data, "data/combined_data.csv")
+write_csv(combined_data, "combined_data.csv")
 
 
 
@@ -127,7 +127,7 @@ write_csv(combined_data, "data/combined_data.csv")
 
 ```{r}
 #Read the data from combined csv
-weather_data <- read_the_csv("data/combined_data.csv") %>%
+weather_data <- read_the_csv("combined_data.csv") %>%
   rename(
     "Total Daily Rainfall" = "Daily Rainfall Total (mm)",
     "Highest 60 Min Rainfall" = "Highest 60 min Rainfall (mm)",
