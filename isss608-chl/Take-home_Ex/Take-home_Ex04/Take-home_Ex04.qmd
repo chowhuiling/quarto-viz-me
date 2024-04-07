@@ -24,6 +24,7 @@ We are using ShinyUI, so we have to install it first:
 ```{r}
 #| eval: false
 #| echo: false
+pacman::p_load("shinydashboard")
 #install.packages("remotes")
 #remotes::install_github("rstudio/shinyuieditor")
 ```
