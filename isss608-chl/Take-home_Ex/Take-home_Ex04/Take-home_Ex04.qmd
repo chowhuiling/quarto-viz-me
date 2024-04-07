@@ -13,8 +13,6 @@ execute:
   warning: false
 ---
 
-## Storyboard
-
 ### Intro
 
 Weather data is subjected to monsoon season in Singapore. Hence, it is important that we use appropriate visuals for analyzing seasonal data so that we can identify any patterns amidst the seasonal data. We want to allow the user to visualize such trends on a user-interface that allows user to toggle parameters to manipulate the dataset and visualisation parameters for the statistical analysis of trends. In this article we will propose a dashboard for the seasonal view of the weather trends. This would form the second view of our three-panel shiny application.
@@ -41,6 +39,8 @@ We are using ShinyUI, so we have to install it first:
 The panel is split into (i) data filter left menu and (ii) main chart area on the right. in (i), user can choose the kind of data (rainfall or temperature), and the start and end period to be analyzed. There will be two charts in (ii), first one showing a cycle plot of historical data over the years for each month, and the second plot showing the distribution of historical data of each month across time. The latter plot will have twelve facets, one for each month. The x-axis will be the mean temperature/rainfall, while the y-axis will be the year.
 
 Below shows a sample layout of the application:
+
+![Seasonal Data Analysis](module2.png)
 
 ### Install Required Libraries
 
@@ -161,9 +161,13 @@ generate_cycle_plot <- function(data, start_date, end_date, selected_stations, s
       filter(Station %in% selected_stations) %>%
       group_by(`Month`, `Year`) %>%
       summarise(
-                meanTemp = mean(`Mean Temperature`, na.rm = TRUE),
-                minTemp = min(`Minimum Temperature`, na.rm = TRUE),
-                maxTemp = max(`Maximum Temperature`, na.rm = TRUE)
+        meanTemp = mean(`Mean Temperature`, na.rm = TRUE),
+        minTemp = min(`Minimum Temperature`, na.rm = TRUE),
+        maxTemp = max(`Maximum Temperature`, na.rm = TRUE),
+        rainfallTotal = mean(`Total Daily Rainfall`, na.rm = TRUE),
+        rainfall_30min = mean(`Highest 30 Min Rainfall`, na.rm = TRUE),
+        rainfall_60min = mean(`Highest 60 Min Rainfall`, na.rm = TRUE),
+        rainfall_120min = mean(`Highest 120 Min Rainfall`, na.rm = TRUE)
                 )
   tempdata
 #}

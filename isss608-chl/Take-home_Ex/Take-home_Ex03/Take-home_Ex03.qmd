@@ -45,15 +45,9 @@ Changi Station is selected as it contains all the temperature data (mean, max, m
 
 The data is retrieved from [*http://www.weather.gov.sg/files/dailydata/DAILYDATA_S\<STN\>\_YYYYMM.csv*]{.underline}*,* where \<STN\> represents the location of the stations and YYYY is the year and MM is the month. `STN` for Changi is 24. Below is the code used to retrieve the csv files:
 
-First, install and load the required package: 
-- `curl` for downloading csv files from website 
-- `tidyverse` for data manipulation 
-- `lubridate` for extracting week and day numbers from date field
-- `ggthemes` is to remove chart junk
-- `patchwork` is to combine multiple plots into one
-- `ggiraph` for inteeractive plot
+First, install and load the required package: - `curl` for downloading csv files from website - `tidyverse` for data manipulation - `lubridate` for extracting week and day numbers from date field - `ggthemes` is to remove chart junk - `patchwork` is to combine multiple plots into one - `ggiraph` for inteeractive plot
 
-```{r} 
+```{r}
 # Install and load the required packages
 pacman::p_load(curl, tidyverse, knitr, lubridate, ggthemes, patchwork, ggiraph)
 ```
@@ -286,11 +280,9 @@ girafe(code = print(combined_plot),
          #opts_hover_inv(css="opacity:0.2;")
        )
 )
-```   
+```
+
 We observe that the cooler days in 2023 are actually towards the end of January, which is hard to explain. More data would probably need to be plotted between 2013 and 2023, and probably over the various months to see if there are any trends in the mean, min and max daily temperatures.
-
-
-
 
 <!-- ## Data visualisation design and interactivity principles and best practices implemented -->
 :::

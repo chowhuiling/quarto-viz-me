@@ -64,7 +64,7 @@ averp %>%
 ### Step 2: Plotting the horizon graph
 
 Next, the code chunk below will be used to plot the horizon graph.
-Take note that we added `#| fig-width: 12` and `#| fig-width: 10` to control the size of the figure
+Take note that we added `#| fig-width: 12` and `#| fig-height: 10` to control the size of the figure
 
 ```{r}
 #| fig-width: 12

@@ -1,0 +1,28 @@
+---
+title: "Hands-on Ex 2: DataViz Makeover"
+author: "Chow Hui Ling"
+date: "25 Feb 2024"
+date-modified: "last-modified"
+date-format: "DD MMM YYYY"
+---
+
+# Overview
+
+In this take-home exercise, we will:
+
+-   critic the submission of one of the Take-home Exercise 1 prepared by our classmate, in terms of clarity and aesthetics
+
+-   prepare a sketch for the alternative design by using the data visualisation design principles and best practices you had learned in Lesson 1 and 2, and
+
+-   remake the original design by using ggplot2, ggplot2 extensions and tidyverse packages.
+
+# Original Submission
+
+## Remade
+## Critique
+### The Good
+Quadrant: 
+### Suggested improvements
+
+# Alternative design
+
